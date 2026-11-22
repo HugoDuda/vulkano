@@ -1,3 +1,5 @@
+// Modified for the VMNL device-loss cleanup backport.
+
 use super::{AccessCheckError, GpuFuture};
 use crate::{
     buffer::Buffer,
@@ -158,9 +160,15 @@ where
 
         match replace(&mut *state, FenceSignalFutureState::Cleaned) {
             FenceSignalFutureState::Flushed(previous, fence) => {
-                fence.wait(timeout)?;
-                unsafe { previous.signal_finished() };
-                Ok(())
+                let result = fence.wait(timeout);
+                match result {
+                    Ok(()) | Err(VulkanError::DeviceLost) => {
+                        // SAFETY: Both results retire work for resource lifetime.
+                        unsafe { previous.signal_finished() };
+                    }
+                    Err(_) => *state = FenceSignalFutureState::Flushed(previous, fence),
+                }
+                result.map_err(Into::into)
             }
             FenceSignalFutureState::Cleaned => Ok(()),
             _ => unreachable!(),
@@ -533,9 +541,10 @@ where
 
         match replace(&mut *state, FenceSignalFutureState::Cleaned) {
             FenceSignalFutureState::Flushed(previous, fence) => {
-                // This is a normal situation. Submitting worked.
-                // TODO: handle errors?
-                fence.wait(None).unwrap();
+                if let Err(error) = fence.wait(None) {
+                    assert_eq!(error, VulkanError::DeviceLost);
+                }
+                // SAFETY: A successful wait or device loss retires the submission.
                 unsafe { previous.signal_finished() };
             }
             FenceSignalFutureState::Cleaned => {

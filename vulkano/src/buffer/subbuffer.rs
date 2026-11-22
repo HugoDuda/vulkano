@@ -1,3 +1,5 @@
+// Modified for the VMNL fallback package, which omits the upstream derive macros.
+
 //! A subpart of a buffer.
 
 use super::{allocator::Arena, Buffer, BufferMemory};
@@ -24,8 +26,6 @@ use std::{
     sync::Arc,
     thread,
 };
-#[cfg(feature = "macros")]
-pub use vulkano_macros::BufferContents;
 
 /// A subpart of a buffer.
 ///
@@ -818,7 +818,7 @@ impl<T: ?Sized> DerefMut for BufferWriteGuard<'_, T> {
 /// }
 /// ```
 ///
-/// [the derive macro]: vulkano_macros::BufferContents
+/// [the derive macro]: https://docs.rs/vulkano-macros/0.35.0/vulkano_macros/derive.BufferContents.html
 //
 // If you absolutely *must* implement this trait by hand, here are the safety requirements (but
 // please open an issue on GitHub instead):
@@ -1158,68 +1158,6 @@ mod tests {
             MemoryRequirements, ResourceMemory,
         },
     };
-
-    #[test]
-    fn derive_buffer_contents() {
-        #[derive(BufferContents)]
-        #[repr(C)]
-        struct Test1(u32, u64, u8);
-
-        assert_eq!(Test1::LAYOUT.head_size() as usize, size_of::<Test1>());
-        assert_eq!(Test1::LAYOUT.element_size(), None);
-        assert_eq!(
-            Test1::LAYOUT.alignment().as_devicesize() as usize,
-            align_of::<Test1>(),
-        );
-
-        #[derive(BufferContents)]
-        #[repr(C)]
-        struct Composite1(Test1, [f32; 9], Test1);
-
-        assert_eq!(
-            Composite1::LAYOUT.head_size() as usize,
-            size_of::<Composite1>(),
-        );
-        assert_eq!(Composite1::LAYOUT.element_size(), None);
-        assert_eq!(
-            Composite1::LAYOUT.alignment().as_devicesize() as usize,
-            align_of::<Composite1>(),
-        );
-
-        #[derive(BufferContents)]
-        #[repr(C)]
-        struct Test2(u64, u8, [u32]);
-
-        assert_eq!(
-            Test2::LAYOUT.head_size() as usize,
-            size_of::<u64>() + size_of::<u32>(),
-        );
-        assert_eq!(
-            Test2::LAYOUT.element_size().unwrap() as usize,
-            size_of::<u32>(),
-        );
-        assert_eq!(
-            Test2::LAYOUT.alignment().as_devicesize() as usize,
-            align_of::<u64>(),
-        );
-
-        #[derive(BufferContents)]
-        #[repr(C)]
-        struct Composite2(Test1, [f32; 9], Test2);
-
-        assert_eq!(
-            Composite2::LAYOUT.head_size() as usize,
-            size_of::<Test1>() + size_of::<[f32; 10]>() + size_of::<u64>() + size_of::<u32>(),
-        );
-        assert_eq!(
-            Composite2::LAYOUT.element_size().unwrap() as usize,
-            size_of::<u32>(),
-        );
-        assert_eq!(
-            Composite2::LAYOUT.alignment().as_devicesize() as usize,
-            align_of::<u64>(),
-        );
-    }
 
     #[test]
     fn split_at() {

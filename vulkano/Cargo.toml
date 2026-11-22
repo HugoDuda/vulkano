@@ -1,11 +1,14 @@
+# Modified for the VMNL fallback package on crates.io.
+
 [package]
-name = "vulkano"
-version = "0.35.2"
+name = "vmnl_vulkano"
+version = "0.35.2-vmnl.1"
+publish = ["crates-io"]
 authors = ["Pierre Krieger <pierre.krieger1708@gmail.com>", "The vulkano contributors"]
-repository = "https://github.com/vulkano-rs/vulkano/tree/master/vulkano"
-description = "Safe wrapper for the Vulkan graphics API"
-documentation = "https://docs.rs/vulkano"
-readme = "../README.md"
+repository = "https://github.com/HugoDuda/vulkano"
+description = "Vulkano 0.35.2 with a device-loss cleanup backport for VMNL Graphics"
+documentation = "https://docs.rs/vmnl_vulkano"
+readme = "README.md"
 build = "build.rs"
 edition = { workspace = true }
 rust-version = { workspace = true }
@@ -13,6 +16,9 @@ license = { workspace = true }
 homepage = { workspace = true }
 keywords = { workspace = true }
 categories = { workspace = true }
+
+[lib]
+name = "vulkano"
 
 [dependencies]
 ash = { workspace = true }
@@ -28,7 +34,6 @@ serde = { workspace = true, optional = true }
 slabbin = { workspace = true }
 smallvec = { workspace = true }
 thread_local = { workspace = true }
-vulkano-macros = { workspace = true, optional = true }
 
 [target.'cfg(target_vendor = "apple")'.dependencies]
 raw-window-metal = { workspace = true }
@@ -53,9 +58,8 @@ vk-parse = { workspace = true }
 libc = "0.2.153"
 
 [features]
-default = ["macros", "x11"]
+default = ["x11"]
 document_unchecked = []
-macros = ["dep:vulkano-macros"]
 x11 = ["dep:x11-dl", "dep:x11rb"]
 
 [lints]

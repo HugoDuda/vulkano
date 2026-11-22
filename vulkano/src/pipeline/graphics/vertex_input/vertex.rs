@@ -1,8 +1,8 @@
+// Modified for the VMNL fallback package, which omits the upstream derive macros.
+
 use super::VertexInputRate;
 use crate::{buffer::BufferContents, format::Format};
 use std::collections::HashMap;
-#[cfg(feature = "macros")]
-pub use vulkano_macros::Vertex;
 
 /// Describes an individual `Vertex`. In other words a collection of attributes that can be read
 /// from a vertex shader.
@@ -106,45 +106,5 @@ impl VertexMemberInfo {
             .iter()
             .filter(|&bits| *bits > 0)
             .count() as u32
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use crate::{format::Format, pipeline::graphics::vertex_input::Vertex};
-    use bytemuck::{Pod, Zeroable};
-
-    #[test]
-    fn derive_vertex_multiple_names() {
-        #[repr(C)]
-        #[derive(Clone, Copy, Debug, Default, Zeroable, Pod, Vertex)]
-        struct TestVertex {
-            #[name("b", "c")]
-            #[format(R32G32B32A32_SFLOAT)]
-            a: [f32; 16],
-        }
-
-        let info = TestVertex::per_vertex();
-        let b = info.members.get("b").unwrap();
-        let c = info.members.get("c").unwrap();
-        assert_eq!(b.format, Format::R32G32B32A32_SFLOAT);
-        assert_eq!(c.format, Format::R32G32B32A32_SFLOAT);
-        assert_eq!(b.num_elements, 4);
-        assert_eq!(c.num_elements, 4);
-    }
-
-    #[test]
-    fn derive_vertex_format() {
-        #[repr(C)]
-        #[derive(Clone, Copy, Debug, Default, Zeroable, Pod, Vertex)]
-        struct TestVertex {
-            #[format(R8_UNORM)]
-            unorm: u8,
-        }
-
-        let info = TestVertex::per_instance();
-        let unorm = info.members.get("unorm").unwrap();
-        assert_eq!(unorm.format, Format::R8_UNORM);
-        assert_eq!(unorm.num_elements, 1);
     }
 }

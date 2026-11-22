@@ -1,15 +1,7 @@
+# Modified for the VMNL fallback package workspace.
+
 [workspace]
-members = [
-    "examples/*",
-    "vulkano",
-    "vulkano-macros",
-    "vulkano-shaders",
-    "vulkano-taskgraph",
-    "vulkano-util",
-]
-# NOTE(Marc): Linux CI is failing because of a transitive dependency of the old winit that this
-# example depends on. I don't know how to update glium to the new version.
-exclude = ["examples/gl-interop"]
+members = ["vulkano"]
 resolver = "2"
 
 [workspace.package]

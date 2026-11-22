@@ -1,3 +1,5 @@
+// Modified for the VMNL fallback package.
+
 #![doc(html_logo_url = "https://raw.githubusercontent.com/vulkano-rs/vulkano/master/logo.png")]
 //! Safe and rich Rust wrapper around the Vulkan API.
 //!
@@ -116,7 +118,7 @@
 //! [`PipelineLayout`]: pipeline::layout
 //! [`RenderPass`]: render_pass::RenderPass
 //! [`Framebuffer`]: render_pass::Framebuffer
-//! [`vulkano-macros`]: vulkano_macros
+//! [`vulkano-macros`]: https://docs.rs/vulkano-macros/0.35.0
 //! [`serde`]: https://crates.io/crates/serde
 
 pub use ash::vk::Handle;

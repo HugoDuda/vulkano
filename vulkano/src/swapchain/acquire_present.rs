@@ -1,3 +1,5 @@
+// Modified for the VMNL device-loss cleanup backport.
+
 use super::{PresentMode, Swapchain};
 use crate::{
     buffer::Buffer,
@@ -393,7 +395,10 @@ impl Drop for SwapchainAcquireFuture {
         }
 
         if let Some(fence) = &self.fence {
-            fence.wait(None).unwrap(); // TODO: handle error?
+            // VK_ERROR_DEVICE_LOST counts as completion for resource lifetime.
+            if let Err(error) = fence.wait(None) {
+                assert_eq!(error, VulkanError::DeviceLost);
+            }
             self.semaphore = None;
         }
 
@@ -1298,7 +1303,10 @@ where
 
         if !*self.finished.get_mut() {
             // Block until the queue finished.
-            self.queue().unwrap().with(|mut q| q.wait_idle()).unwrap();
+            if let Err(error) = self.queue().unwrap().with(|mut q| q.wait_idle()) {
+                assert_eq!(error, VulkanError::DeviceLost);
+            }
+            // SAFETY: Queue idle and device loss both retire submitted work.
             unsafe { self.previous.signal_finished() };
         }
     }
