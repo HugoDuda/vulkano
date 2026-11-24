@@ -3,6 +3,8 @@
 A VMNL Graphics fallback build of [Vulkano 0.35.2](https://github.com/vulkano-rs/vulkano/tree/v0.35.2).
 It backports device-loss handling during swapchain and submission future cleanup and preserves
 the pending submission after a fence wait times out. See the [upstream proposal](https://github.com/vulkano-rs/vulkano/pull/2856).
+It also destroys newly created swapchains when image enumeration fails. See
+[Vulkano #2857](https://github.com/vulkano-rs/vulkano/pull/2857).
 
 The library name is `vulkano`. VMNL uses its own vertex and buffer derives with this build.
 The upstream procedural macros use the original Cargo package identity and are omitted here.

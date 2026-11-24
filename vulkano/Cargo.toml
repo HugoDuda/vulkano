@@ -2,11 +2,11 @@
 
 [package]
 name = "vmnl_vulkano"
-version = "0.35.2-vmnl.1"
+version = "0.35.2-vmnl.2"
 publish = ["crates-io"]
 authors = ["Pierre Krieger <pierre.krieger1708@gmail.com>", "The vulkano contributors"]
 repository = "https://github.com/HugoDuda/vulkano"
-description = "Vulkano 0.35.2 with a device-loss cleanup backport for VMNL Graphics"
+description = "Vulkano 0.35.2 with device-loss and swapchain cleanup backports for VMNL Graphics"
 documentation = "https://docs.rs/vmnl_vulkano"
 readme = "README.md"
 build = "build.rs"
