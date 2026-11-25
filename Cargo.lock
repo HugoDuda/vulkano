@@ -454,7 +454,7 @@ dependencies = [
 
 [[package]]
 name = "vmnl_vulkano"
-version = "0.35.2-vmnl.2"
+version = "0.35.2-vmnl.3"
 dependencies = [
  "ash",
  "bytemuck",
