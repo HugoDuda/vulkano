@@ -1,3 +1,17 @@
+# vmnl_vulkano
+
+A fork of Vulkano 0.35.2 with targeted GPU future and swapchain cleanup fixes for
+[VMNL Graphics](https://github.com/VMNL/vmnl-graphics).
+
+| Published package | Source commit |
+| --- | --- |
+| [0.35.2-vmnl.2](https://crates.io/crates/vmnl_vulkano/0.35.2-vmnl.2) | [`30d7ea5e`](https://github.com/HugoDuda/vulkano/tree/30d7ea5e05766b291e0e2b9e1a166bbf6b8f6752) |
+| [0.35.2-vmnl.1](https://crates.io/crates/vmnl_vulkano/0.35.2-vmnl.1) | [`e7364ef5`](https://github.com/HugoDuda/vulkano/tree/e7364ef5fb322a9a0a0b76825d4dec3b0e51ba6b) |
+
+See the [package README](vulkano/README.md) for backport details.
+
+---
+
 <img align="left" alt="" src="logo.png" height="150" />
 
 # [Vulkano](https://vulkano.rs)
